@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../screens/reset_password_screen.dart';
-import '../screens/profile_screen.dart';
+import '../providers/auth.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
+  static const routeName = '/auth';
   @override
   State<LoginScreen> createState() => _LoginScreen();
 }
 
 class _LoginScreen extends State<LoginScreen> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  Map<String, String> _authData = {
+    'username': '',
+    'password': '',
+  };
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,24 +42,31 @@ class _LoginScreen extends State<LoginScreen> {
                   'Sign in',
                   style: TextStyle(fontSize: 20),
                 )),
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'User Name',
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-              child: TextField(
-                obscureText: true,
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
+            Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Username',
+                      ),
+                      onSaved: (value) {
+                        _authData['username'] = value;
+                      },
+                    ),
+                    TextFormField(
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Password',
+                      ),
+                      onSaved: (value) {
+                        _authData['password'] = value;
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -74,7 +84,7 @@ class _LoginScreen extends State<LoginScreen> {
               child: ElevatedButton(
                 child: const Text('Login'),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(ProfileScreen.routeName);
+                  _submit();
                 },
               ),
             ),
@@ -82,5 +92,11 @@ class _LoginScreen extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _submit() async {
+    _formKey.currentState.save();
+    await Provider.of<Auth>(context, listen: false)
+        .login(_authData['username'], _authData['password']);
   }
 }

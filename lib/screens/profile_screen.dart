@@ -1,3 +1,6 @@
+import '../providers/auth.dart';
+import '../providers/info.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:profile/profile.dart';
 
@@ -17,20 +20,22 @@ class ProfileScreen extends StatelessWidget {
               alignment: Alignment.center,
               padding: const EdgeInsets.all(10),
             ),
-            Profile(
-              imageUrl:
-                  "https://avatars.githubusercontent.com/u/26470894?s=400&u=3c7627f74e2098059bbe2ab24af167e2adbe4383&v=4",
-              name: "Ibrahim Alkhwaja",
-              website: "gmail.com",
-              designation: "COOP Student",
-              email: "ibrahim.alkhwaja@gmail.com",
-              phone_number: "0551177414",
+            Container(
+              child: Profile(
+                imageUrl:
+                    "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909__340.png",
+                name: "Ibrahim Alkhwaja",
+                website: "gmail.com",
+                designation: "COOP Student",
+                email: "ibrahim.alkhwaja@gmail.com",
+                phone_number: "0551177414",
+              ),
             ),
             Container(
               child: ElevatedButton(
                 child: const Text('Delete Account'),
                 onPressed: () {
-                  print('hello');
+                  Provider.of<Info>(context, listen: false).getUserInfo();
                 },
               ),
             ),
@@ -38,7 +43,7 @@ class ProfileScreen extends StatelessWidget {
               child: ElevatedButton(
                 child: const Text('Logout'),
                 onPressed: () {
-                  print('hello');
+                  Provider.of<Auth>(context, listen: false).logout();
                 },
               ),
             ),
