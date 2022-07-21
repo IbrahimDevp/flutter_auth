@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 class Auth with ChangeNotifier {
   String _token;
+  String _username;
 
   bool get isAuth {
     return token != null;
@@ -13,6 +14,13 @@ class Auth with ChangeNotifier {
   String get token {
     if (_token != null) {
       return _token;
+    }
+    return null;
+  }
+
+  String get username {
+    if (_username != null) {
+      return _username;
     }
     return null;
   }
@@ -32,6 +40,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> login(String username, String password) async {
+    _username = username;
     return _authenticate(username, password);
   }
 

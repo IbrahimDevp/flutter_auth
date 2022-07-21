@@ -12,8 +12,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreen extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   Map<String, String> _authData = {
-    'username': '',
-    'password': '',
+    'username': 'dbroadbridge4',
+    'password': 'fUVh0U1prk',
   };
   @override
   Widget build(BuildContext context) {

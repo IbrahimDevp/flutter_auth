@@ -20,17 +20,7 @@ class ProfileScreen extends StatelessWidget {
               alignment: Alignment.center,
               padding: const EdgeInsets.all(10),
             ),
-            Container(
-              child: Profile(
-                imageUrl:
-                    "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909__340.png",
-                name: "Ibrahim Alkhwaja",
-                website: "gmail.com",
-                designation: "COOP Student",
-                email: "ibrahim.alkhwaja@gmail.com",
-                phone_number: "0551177414",
-              ),
-            ),
+            Container(),
             Container(
               child: ElevatedButton(
                 child: const Text('Delete Account'),
