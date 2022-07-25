@@ -3,33 +3,79 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 
+class User {
+  String fname;
+  String lname;
+  String email;
+  String company;
+  String gender;
+  String uname;
+  User({
+    @required this.fname,
+    @required this.lname,
+    @required this.email,
+    @required this.company,
+    @required this.gender,
+    @required this.uname,
+  });
+}
+
 class Info with ChangeNotifier {
   final String token;
   final String username;
   Info(this.token, this.username);
-  Future<void> getUserInfo() async {
-    final Map<String, String> queryParameters = {
-      'username': username,
-    };
+  var _youraccount = new User(
+    fname: '',
+    lname: '',
+    email: '',
+    company: '',
+    gender: '',
+    uname: '',
+  );
 
-    final url = Uri.http('10.0.2.2:4000', '/api/v1/users', queryParameters);
+  User get userInfo {
+    return _youraccount;
+  }
+
+  Future<void> getUserInfo() async {
+    final url = Uri.parse('http://10.0.2.2:4000/api/v1/users');
     final response = await http.get(
       url,
       headers: {
         HttpHeaders.authorizationHeader: '$token',
       },
     );
-    final responseJson = jsonDecode(response.body);
-    final index = responseJson['result']
-        .indexWhere((element) => element['username'] == username);
-    final fullUserData = responseJson['result'][index];
-    Map<String, String> UserData = {
-      'first_name': fullUserData['first_name'],
-      'last_name': fullUserData['last_name'],
-      'email': fullUserData['email'],
-      'company': fullUserData['company'],
-      'gender': fullUserData['gender'],
-    };
-    print(UserData);
+
+    // final responseJson = (jsonDecode(response.body))['result']
+    //     .indexWhere((e) => e['username'] == username);
+    // print(responseJson);
+    final data = jsonDecode(response.body)['result'];
+    final index = data.indexWhere((element) => element['username'] == username);
+    final userObject = data[index];
+    final userData = User(
+      fname: userObject['first_name'],
+      lname: userObject['last_name'],
+      email: userObject['email'],
+      company: userObject['company'],
+      gender: userObject['gender'],
+      uname: username,
+    );
+    _youraccount = userData;
+    notifyListeners();
+  }
+
+  Future<void> deleteAccount() async {
+    final url = Uri.parse('http://10.0.2.2:4000/api/v1/users/remove');
+    final request = http.Request("DELETE", url);
+    request.headers.addAll(<String, String>{
+      "Content-Type": "application/json",
+      HttpHeaders.authorizationHeader: '$token',
+    });
+    Map data = {"username": "$username"};
+    request.body = json.encode(data);
+    final response = await request.send();
+    final respStr = await response.stream.bytesToString();
+    print(response.statusCode);
+    print(respStr);
   }
 }

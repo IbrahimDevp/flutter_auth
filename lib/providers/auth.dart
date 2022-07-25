@@ -35,7 +35,6 @@ class Auth with ChangeNotifier {
     );
     final responseData = json.decode(response.body);
     _token = responseData['result'];
-    print(_token);
     notifyListeners();
   }
 

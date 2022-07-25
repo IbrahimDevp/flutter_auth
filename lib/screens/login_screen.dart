@@ -12,9 +12,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreen extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   Map<String, String> _authData = {
-    'username': 'dbroadbridge4',
-    'password': 'fUVh0U1prk',
+    'username': 'adunnionr',
+    'password': 'arUt6NCkZ',
   };
+
+  var _isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,6 +58,7 @@ class _LoginScreen extends State<LoginScreen> {
                         _authData['username'] = value;
                       },
                     ),
+                    Divider(),
                     TextFormField(
                       obscureText: true,
                       decoration: const InputDecoration(
@@ -66,6 +69,7 @@ class _LoginScreen extends State<LoginScreen> {
                         _authData['password'] = value;
                       },
                     ),
+                    if (_isLoading) CircularProgressIndicator()
                   ],
                 ),
               ),
@@ -95,8 +99,15 @@ class _LoginScreen extends State<LoginScreen> {
   }
 
   Future<void> _submit() async {
-    _formKey.currentState.save();
+    //_formKey.currentState.save();
+
+    setState(() {
+      _isLoading = true;
+    });
     await Provider.of<Auth>(context, listen: false)
         .login(_authData['username'], _authData['password']);
+    setState(() {
+      _isLoading = false;
+    });
   }
 }
