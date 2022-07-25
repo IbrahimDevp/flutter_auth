@@ -75,7 +75,6 @@ class Info with ChangeNotifier {
     request.body = json.encode(data);
     final response = await request.send();
     final respStr = await response.stream.bytesToString();
-    print(response.statusCode);
     print(respStr);
   }
 }

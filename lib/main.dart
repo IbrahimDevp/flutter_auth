@@ -5,6 +5,7 @@ import './screens/profile_screen.dart';
 import 'package:provider/provider.dart';
 import './providers/auth.dart';
 import './providers/info.dart';
+import './providers/reset.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,6 +20,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProxyProvider<Auth, Info>(
             update: (ctx, auth, prev) => Info(auth.token, auth.username)),
+        ChangeNotifierProvider.value(
+          value: Reset(),
+        ),
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
