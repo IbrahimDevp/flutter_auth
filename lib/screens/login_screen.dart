@@ -13,8 +13,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreen extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   Map<String, String> _authData = {
-    'username': 'jarmatage8',
-    'password': '123321',
+    'username': '',
+    'password': '',
   };
 
   var _isLoading = false;
@@ -100,7 +100,7 @@ class _LoginScreen extends State<LoginScreen> {
   }
 
   Future<void> _submit() async {
-    //_formKey.currentState.save();
+    _formKey.currentState.save();
 
     setState(() {
       if (!_formKey.currentState.validate()) {
@@ -140,7 +140,7 @@ class _LoginScreen extends State<LoginScreen> {
               onPressed: () {
                 Navigator.of(ctx).pop(); //Close the pop window message.
               },
-              child: Text('Go to Login')),
+              child: Text('Close')),
         ],
       ),
     );
