@@ -20,6 +20,19 @@ class User {
   });
 }
 
+class Colleagues {
+  String fname;
+  String lname;
+  String company;
+  String gender;
+  Colleagues({
+    @required this.fname,
+    @required this.lname,
+    @required this.company,
+    @required this.gender,
+  });
+}
+
 class Info with ChangeNotifier {
   final String token;
   final String username;
@@ -32,9 +45,14 @@ class Info with ChangeNotifier {
     gender: '',
     uname: '',
   );
+  List _colleagues = [];
 
   User get userInfo {
     return _youraccount;
+  }
+
+  List get colleaguesInfo {
+    return _colleagues;
   }
 
   Future<void> getUserInfo() async {
@@ -52,6 +70,9 @@ class Info with ChangeNotifier {
     final data = jsonDecode(response.body)['result'];
     final index = data.indexWhere((element) => element['username'] == username);
     final userObject = data[index];
+    final company = userObject['company'];
+    print(company);
+    final friends = List.from(data.where((x) => x['company'] == company));
     final userData = User(
       fname: userObject['first_name'],
       lname: userObject['last_name'],
@@ -61,6 +82,8 @@ class Info with ChangeNotifier {
       uname: username,
     );
     _youraccount = userData;
+    // _colleagues = friends.map((e) => Colleagues(fname: e['fname'])).toList();
+    print(_colleagues);
     notifyListeners();
   }
 

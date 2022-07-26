@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../screens/reset_password_screen.dart';
 import '../providers/auth.dart';
 import 'package:provider/provider.dart';
+import '../models/http_exception.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/auth';
@@ -13,7 +14,7 @@ class _LoginScreen extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   Map<String, String> _authData = {
     'username': 'jarmatage8',
-    'password': 'xwNEVYPnI',
+    'password': '123321',
   };
 
   var _isLoading = false;
@@ -102,12 +103,46 @@ class _LoginScreen extends State<LoginScreen> {
     //_formKey.currentState.save();
 
     setState(() {
+      if (!_formKey.currentState.validate()) {
+        // Invalid!
+        return;
+      }
       _isLoading = true;
     });
-    await Provider.of<Auth>(context, listen: false)
-        .login(_authData['username'], _authData['password']);
+    try {
+      await Provider.of<Auth>(context, listen: false)
+          .login(_authData['username'], _authData['password']);
+    } on HttpException catch (error) {
+      var errorMessage = 'Authentication failed';
+      if (error.toString().contains('Password')) {
+        errorMessage = 'Your password is incorrect.';
+      } else if (error.toString().contains('registered')) {
+        errorMessage = 'This account is not registered.';
+      }
+      _showErrorDialog(errorMessage);
+    } catch (error) {
+      var errorMessage = 'Could not authenticate you. Please try again later.';
+      _showErrorDialog(errorMessage);
+    }
     setState(() {
       _isLoading = false;
     });
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Login Error!'),
+        content: Text(message),
+        actions: [
+          ElevatedButton(
+              onPressed: () {
+                Navigator.of(ctx).pop(); //Close the pop window message.
+              },
+              child: Text('Go to Login')),
+        ],
+      ),
+    );
   }
 }

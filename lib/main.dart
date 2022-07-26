@@ -26,17 +26,16 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
-            theme: ThemeData(
-              primarySwatch: Colors.brown,
-              colorScheme: ColorScheme.fromSwatch().copyWith(
-                secondary: pColor,
-              ),
-            ),
-            home: auth.isAuth ? ProfileScreen() : LoginScreen(),
-            routes: {
-              LoginScreen.routeName: (ctx) => LoginScreen(),
-              ResetPasswordScreen.routeName: (ctx) => ResetPasswordScreen(),
-            }),
+          theme: ThemeData(
+            primarySwatch: Colors.brown,
+            accentColor: Color.fromARGB(255, 209, 157, 68),
+          ),
+          home: auth.isAuth ? ProfileScreen() : LoginScreen(),
+          routes: {
+            LoginScreen.routeName: (ctx) => LoginScreen(),
+            ResetPasswordScreen.routeName: (ctx) => ResetPasswordScreen(),
+          },
+        ),
       ),
     );
   }

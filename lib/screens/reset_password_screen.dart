@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_auth/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/reset.dart';
+import '../models/http_exception.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   static const routeName = '/reset-password';
@@ -11,7 +13,7 @@ class ResetPasswordScreen extends StatefulWidget {
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
-
+  var _isLoading = false;
   Map<String, String> _authData = {
     'username': '',
     'password': '',
@@ -69,6 +71,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         _authData['npassword'] = value;
                       },
                     ),
+                    if (_isLoading) CircularProgressIndicator(),
                   ],
                 ),
               ),
@@ -93,7 +96,81 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   Future<void> _submit() async {
     _formKey.currentState.save();
 
-    await Provider.of<Reset>(context, listen: false).resetPassword(
-        _authData['username'], _authData['password'], _authData['npassword']);
+    bool _condition = false;
+    setState(() {
+      if (!_formKey.currentState.validate()) {
+        // Invalid!
+        return;
+      }
+      _isLoading = true;
+    });
+    try {
+      await Provider.of<Reset>(context, listen: false).resetPassword(
+          _authData['username'], _authData['password'], _authData['npassword']);
+    } on HttpException catch (error) {
+      var errorMessage = 'Update password failed';
+      if (error.toString().contains('Password')) {
+        errorMessage = 'Your password is incorrect.';
+      } else if (error.toString().contains('exist')) {
+        errorMessage = 'This account is not registered.';
+      } else if (error.toString().contains('empty')) {
+        errorMessage = 'You have some empty fields.';
+      } else if (error.toString().contains('similar')) {
+        errorMessage =
+            'Your new password cannot be similar to the current password.';
+      }
+      _condition = true;
+      _showErrorDialog(errorMessage);
+    } catch (error) {
+      var errorMessage = 'Could not update password. Please try again later.';
+      _showErrorDialog(errorMessage);
+      _condition = true;
+    }
+    if (_condition == false) {
+      _success();
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Reset Password Error!'),
+        content: Text(message),
+        actions: [
+          ElevatedButton(
+              onPressed: () {
+                Navigator.of(ctx).pop(); //Close the pop window message.
+              },
+              child: Text('Okay'))
+        ],
+      ),
+    );
+  }
+
+  void _success() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Great!'),
+        content: Text('You password has been reset.'),
+        actions: [
+          ElevatedButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+              child: Text('Cancel')),
+          ElevatedButton(
+              onPressed: () {
+                int count = 0;
+                Navigator.of(context).popUntil((_) => count++ >= 2);
+              },
+              child: Text('Go to Login'))
+        ],
+      ),
+    );
   }
 }

@@ -9,6 +9,35 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _delete() {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('Deleting Account!'),
+          content: Text('Are you sure you want to delete your account?'),
+          actions: [
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: Text('Cancel')),
+            ElevatedButton(
+              onPressed: () {
+                int count = 0;
+                Provider.of<Info>(context, listen: false).deleteAccount();
+                Navigator.of(ctx).pop();
+                Provider.of<Auth>(context, listen: false).logout();
+              },
+              child: Text(
+                'DELETE ACCOUNT!',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     final productsData = Provider.of<Info>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
@@ -34,7 +63,7 @@ class ProfileScreen extends StatelessWidget {
                 child: ElevatedButton(
                   child: const Text('Delete Account'),
                   onPressed: () {
-                    Provider.of<Info>(context, listen: false).deleteAccount();
+                    _delete();
                   },
                 ),
               ),
@@ -46,6 +75,12 @@ class ProfileScreen extends StatelessWidget {
                   },
                 ),
               ),
+              // Consumer(
+              //   builder: (ctx, orderData, child) => ListView.builder(
+              //     itemCount: productsData.colleaguesInfo.length,
+              //     itemBuilder: (ctx, i) => Text(productsData.colleaguesInfo[i]),
+              //   ),
+              // ),
             ],
           ),
         ),
