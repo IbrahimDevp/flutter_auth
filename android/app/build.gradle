@@ -53,7 +53,7 @@ android {
         versionName flutterVersionName
     }
 
-    buildTypes {
+   buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
@@ -68,4 +68,5 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    //implementation "com.google.android.material:material:$kotlin_version"
 }
