@@ -21,13 +21,13 @@ class User {
 }
 
 class Colleagues {
-  String fname;
-  String lname;
+  String first_name;
+  String last_name;
   String company;
   String gender;
   Colleagues({
-    @required this.fname,
-    @required this.lname,
+    @required this.first_name,
+    @required this.last_name,
     @required this.company,
     @required this.gender,
   });
@@ -45,7 +45,7 @@ class Info with ChangeNotifier {
     gender: '',
     uname: '',
   );
-  List _colleagues = [];
+  var _colleagues = [];
 
   User get userInfo {
     return _youraccount;
@@ -71,7 +71,6 @@ class Info with ChangeNotifier {
     final index = data.indexWhere((element) => element['username'] == username);
     final userObject = data[index];
     final company = userObject['company'];
-    print(company);
     final friends = List.from(data.where((x) => x['company'] == company));
     final userData = User(
       fname: userObject['first_name'],
@@ -82,7 +81,20 @@ class Info with ChangeNotifier {
       uname: username,
     );
     _youraccount = userData;
-    // _colleagues = friends.map((e) => Colleagues(fname: e['fname'])).toList();
+    //
+    // _colleagues = friends
+    //     .map(
+    //       (e) => Colleagues(
+    //           fname: friends[e]['first_name'],
+    //           lname: friends[e]['last_name'],
+    //           company: friends[e]['company'],
+    //           gender: friends[e]['gender']),
+    //     )
+    //     .toList();
+    var len = friends.length;
+    for (int i = 0; i < len; i++) {
+      _colleagues.add(friends[i]['first_name']);
+    }
     print(_colleagues);
     notifyListeners();
   }

@@ -53,12 +53,29 @@ class ProfileScreen extends StatelessWidget {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(10),
               ),
+              Text(
+                'Profile Details:',
+                style: TextStyle(fontSize: 20),
+              ),
               Text(productsData.userInfo.fname),
               Text(productsData.userInfo.lname),
               Text(productsData.userInfo.email),
               Text(productsData.userInfo.company),
               Text(productsData.userInfo.gender),
               Text(productsData.userInfo.uname),
+              Divider(),
+              Text(
+                'People who also work at ' + productsData.userInfo.company,
+                style: TextStyle(fontSize: 20),
+              ),
+              for (int i = 0;
+                  i < (productsData.colleaguesInfo.length.toInt());
+                  i++)
+                if (productsData.userInfo.fname !=
+                    productsData.colleaguesInfo[i].toString())
+                  Text(
+                    productsData.colleaguesInfo[i].toString(),
+                  ),
               Container(
                 child: ElevatedButton(
                   child: const Text('Delete Account'),
