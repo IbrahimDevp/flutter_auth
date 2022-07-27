@@ -63,10 +63,6 @@ class Info with ChangeNotifier {
         HttpHeaders.authorizationHeader: '$token',
       },
     );
-
-    // final responseJson = (jsonDecode(response.body))['result']
-    //     .indexWhere((e) => e['username'] == username);
-    // print(responseJson);
     final data = jsonDecode(response.body)['result'];
     final index = data.indexWhere((element) => element['username'] == username);
     final userObject = data[index];
@@ -81,21 +77,10 @@ class Info with ChangeNotifier {
       uname: username,
     );
     _youraccount = userData;
-    //
-    // _colleagues = friends
-    //     .map(
-    //       (e) => Colleagues(
-    //           fname: friends[e]['first_name'],
-    //           lname: friends[e]['last_name'],
-    //           company: friends[e]['company'],
-    //           gender: friends[e]['gender']),
-    //     )
-    //     .toList();
     var len = friends.length;
     for (int i = 0; i < len; i++) {
       _colleagues.add(friends[i]['first_name']);
     }
-    print(_colleagues);
     notifyListeners();
   }
 
