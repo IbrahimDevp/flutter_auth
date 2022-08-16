@@ -108,17 +108,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       await Provider.of<Reset>(context, listen: false).resetPassword(
           _authData['username'], _authData['password'], _authData['npassword']);
     } on HttpException catch (error) {
-      var errorMessage = 'Update password failed';
-      if (error.toString().contains('Password')) {
-        errorMessage = 'Your password is incorrect.';
-      } else if (error.toString().contains('exist')) {
-        errorMessage = 'This account is not registered.';
-      } else if (error.toString().contains('empty')) {
-        errorMessage = 'You have some empty fields.';
-      } else if (error.toString().contains('similar')) {
-        errorMessage =
-            'Your new password cannot be similar to the current password.';
-      }
+      var errorMessage = error.toString();
       _condition = true;
       _showErrorDialog(errorMessage);
     } catch (error) {

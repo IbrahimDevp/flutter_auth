@@ -28,19 +28,20 @@ class Auth with ChangeNotifier {
 
   Future<void> _authenticate(String username, String password) async {
     var credentials = '$username:$password';
-    final url = Uri.parse('http://10.0.2.2:4000/api/v1/auth/login');
+    final url = Uri.parse('http://161.35.99.225:80/api/v1/auth/login');
     String encoded = base64Encode(utf8.encode(credentials));
     try {
       final response = await http.post(
         url,
         headers: {HttpHeaders.authorizationHeader: 'Basic $encoded'},
       );
+
       final responseData = json.decode(response.body);
-      String thisone = responseData['result'];
-      if (thisone.contains('not')) {
+      if (responseData['result'].runtimeType == String) {
         throw HttpException(responseData['result']);
+      } else {
+        _token = responseData['result']['accessToken'];
       }
-      _token = responseData['result'];
       notifyListeners();
     } catch (error) {
       throw error;
