@@ -38,13 +38,13 @@ class ProfileScreen extends StatelessWidget {
       );
     }
 
-    final productsData = Provider.of<Info>(context, listen: false);
+    final loggedinUser = Provider.of<Info>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
       ),
       body: FutureBuilder(
-        future: productsData.getUserInfo(),
+        future: loggedinUser.getUserInfo(),
         builder: (_, __) => Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
@@ -57,24 +57,28 @@ class ProfileScreen extends StatelessWidget {
                 'Profile Details:',
                 style: TextStyle(fontSize: 20),
               ),
-              Text(productsData.userInfo.fname),
-              Text(productsData.userInfo.lname),
-              Text(productsData.userInfo.email),
-              Text(productsData.userInfo.company),
-              Text(productsData.userInfo.gender),
-              Text(productsData.userInfo.uname),
+              Text(loggedinUser.userInfo.fname),
+              Text(loggedinUser.userInfo.lname),
+              Text(loggedinUser.userInfo.email),
+              Text(loggedinUser.userInfo.company),
+              Text(loggedinUser.userInfo.gender),
+              Text(loggedinUser.userInfo.uname),
               Divider(),
               Text(
-                'People who also work at ' + productsData.userInfo.company,
+                'People who also work at ' + loggedinUser.userInfo.company,
                 style: TextStyle(fontSize: 20),
               ),
+              if (loggedinUser.colleaguesInfo.length.toInt() == 1)
+                Text(
+                  'No colleagues with ' + loggedinUser.userInfo.fname,
+                ),
               for (int i = 0;
-                  i < (productsData.colleaguesInfo.length.toInt());
+                  i < (loggedinUser.colleaguesInfo.length.toInt());
                   i++)
-                if (productsData.userInfo.fname !=
-                    productsData.colleaguesInfo[i].toString())
+                if (loggedinUser.userInfo.fname !=
+                    loggedinUser.colleaguesInfo[i].toString())
                   Text(
-                    productsData.colleaguesInfo[i].toString(),
+                    loggedinUser.colleaguesInfo[i].toString(),
                   ),
               Container(
                 child: ElevatedButton(

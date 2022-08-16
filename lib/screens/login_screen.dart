@@ -113,12 +113,7 @@ class _LoginScreen extends State<LoginScreen> {
       await Provider.of<Auth>(context, listen: false)
           .login(_authData['username'], _authData['password']);
     } on HttpException catch (error) {
-      var errorMessage = 'Authentication failed';
-      if (error.toString().contains('Password')) {
-        errorMessage = 'Your password is incorrect.';
-      } else if (error.toString().contains('registered')) {
-        errorMessage = 'This account is not registered.';
-      }
+      var errorMessage = error.toString();
       _showErrorDialog(errorMessage);
     } catch (error) {
       var errorMessage = 'Could not authenticate you. Please try again later.';
